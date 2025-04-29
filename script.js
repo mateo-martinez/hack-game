@@ -7,6 +7,10 @@ const playerDataElement = document.getElementById('player-data');
 const messageArea = document.getElementById('message-area');
 const messageText = document.getElementById('message-text');
 const messageCloseButton = document.getElementById('message-close-button');
+const helpArea = document.getElementById('help-area'); // Get the help area element
+const helpText = document.getElementById('help-text'); // Get the help text element
+const helpCloseButton = document.getElementById('help-close-button'); // Get the help close button
+const restartButton = document.getElementById('restart-button'); // Get the restart button element
 
 let currentLevel = 1;
 let playerData = 0;
@@ -23,7 +27,8 @@ const levels = {
             { type: "button", text: "Quick Scan (Risky)", action: () => checkNetworkScan(['192.168.1.12', '192.168.1.15', '192.168.1.25'], '192.168.1.15', true) }
         ],
         reward: 20,
-        nextLevelMessage: "You've identified the active server. It might hold the key to the message."
+        nextLevelMessage: "You've identified the active server. It might hold the key to the message.",
+        help: "Use the buttons to initiate a network scan. The objective is to find the server with the IP address '192.168.1.15'."
     },
     2: {
         title: "Level 2: Port Exploitation",
@@ -31,11 +36,12 @@ const levels = {
         story: "The scan revealed an open port 23 (Telnet) on 192.168.1.15. It's an old and often vulnerable protocol. Try to exploit it.",
         interaction: [
             { type: "button", text: "Attempt Exploit (Port 21 - FTP)", action: () => displayMessage("Attempting...", () => checkPortExploit(21, false)) },
-            { type: "button", text: "Attempt Exploit (Port 23 - Telnet)", action: () => displayMessage("Attempting...", () => checkPortExploit(23, true)) },
-            { type: "button", text: "Attempt Exploit (Port 80 - HTTP)", action: () => displayMessage("Attempting...", () => checkPortExploit(80, false)) }
+            { type: "button", text: "Attempt Exploit (Port 23 - Telnet)", action: () => checkPortExploit(23, true) },
+            { type: "button", text: "Attempt Exploit (Port 80 - HTTP)", action: () => checkPortExploit(80, false) }
         ],
         reward: 30,
-        nextLevelMessage: "You've gained a foothold! There might be valuable data inside."
+        nextLevelMessage: "You've gained a foothold! There might be valuable data inside.",
+        help: "Try clicking the buttons to attempt exploiting different ports. The vulnerable port is 23."
     },
     3: {
         title: "Level 3: File System Navigation",
@@ -48,7 +54,8 @@ const levels = {
             { type: "hiddenFile", name: "secret.txt", content: "The next clue is: LOOK FOR THE WEB." }
         ],
         reward: 40,
-        nextLevelMessage: "You found a clue! 'LOOK FOR THE WEB'... What could it mean?"
+        nextLevelMessage: "You found a clue! 'LOOK FOR THE WEB'... What could it mean?",
+        help: "Use the simulated terminal to navigate the file system. The commands you need to use are 'ls' (list files), 'cd [directory]' (change directory), and 'cat [filename]' (view file content). Follow the sequence of commands provided."
     }
 };
 
@@ -62,6 +69,9 @@ function initGame() {
 
     nextLevelButton.addEventListener('click', nextLevel);
     messageCloseButton.addEventListener('click', hideMessage);
+    restartButton.addEventListener('click', restartGame); // Add event listener for restart
+    document.getElementById('help-button').addEventListener('click', showHelp); // Add event listener for help
+    helpCloseButton.addEventListener('click', hideHelp); // Add event listener for closing help
 }
 
 function loadLevel(levelNumber) {
@@ -107,10 +117,11 @@ function loadLevel(levelNumber) {
 function checkNetworkScan(networkAddresses, targetAddress, isRisky = false) {
     if (networkAddresses.includes(targetAddress)) {
         const message = `Scan complete. Active server found at ${targetAddress}.`;
+        const nextAction = () => levelComplete(levels[currentLevel].reward, levels[currentLevel].nextLevelMessage);
         if (isRisky) {
-            displayMessage(message + " (Quick scan might have alerted the target!)", () => levelComplete(levels[currentLevel].reward, levels[currentLevel].nextLevelMessage));
+            displayMessage(message + " (Quick scan might have alerted the target!)", nextAction);
         } else {
-            displayMessage(message, () => levelComplete(levels[currentLevel].reward, levels[currentLevel].nextLevelMessage));
+            displayMessage(message, nextAction);
         }
     } else {
         displayMessage("Scan complete. No active server found at the expected addresses. Try again.");
@@ -225,6 +236,30 @@ function saveGame() {
 function loadGame() {
     const savedData = localStorage.getItem('cipherpunk_save');
     return savedData ? JSON.parse(savedData) : null;
+}
+
+function restartGame() {
+    currentLevel = 1;
+    playerData = 0;
+    localStorage.removeItem('cipherpunk_save'); // Clear saved data
+    loadLevel(currentLevel);
+    updateHUD();
+    displayMessage("Game restarted.");
+}
+
+function showHelp() {
+    const currentLevelData = levels[currentLevel];
+    if (currentLevelData && currentLevelData.help) {
+        helpText.textContent = currentLevelData.help;
+        helpArea.style.display = 'block';
+    } else {
+        helpText.textContent = "No help available for this level.";
+        helpArea.style.display = 'block';
+    }
+}
+
+function hideHelp() {
+    helpArea.style.display = 'none';
 }
 
 // Initialize the game when the page loads
