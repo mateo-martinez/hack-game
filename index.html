@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cipherpunk (Example)</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div id="game-area">
+            <h1 id="level-title">Level 1: Initial Breach</h1>
+            <div id="game-content">
+                <p id="objective">Analyze the network traffic.</p>
+                <div id="interaction-area">
+                    </div>
+                <button id="next-level-button" style="display: none;">Next Level</button>
+            </div>
+            <div id="hud">
+                <p>Progress: <span id="level-number">1</span> / 100</p>
+                <p>Data: <span id="player-data">0</span></p>
+            </div>
+        </div>
+        <div id="message-area" style="display: none;">
+            <p id="message-text"></p>
+            <button id="message-close-button">Close</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
