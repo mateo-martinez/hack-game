@@ -1,8 +1,8 @@
 body {
-    font-family: sans-serif;
+    font-family: monospace; /* Changed to monospace for terminal feel */
     margin: 0;
-    background-color: #111;
-    color: #eee;
+    background-color: #000; /* Dark background for terminal feel */
+    color: #00ff00; /* Green text for terminal feel */
     display: flex;
     justify-content: center;
     align-items: center;
@@ -10,12 +10,12 @@ body {
 }
 
 .container {
-    background-color: #222;
+    background-color: #111;
     border-radius: 8px;
     padding: 20px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+    box-shadow: 0 0 10px rgba(0, 255, 128, 0.3); /* Neon shadow */
     width: 90%;
-    max-width: 600px;
+    max-width: 700px; /* Slightly wider for terminal */
 }
 
 #game-area, #message-area {
@@ -32,14 +32,23 @@ body {
     margin-bottom: 15px;
 }
 
-#interaction-area button {
-    padding: 10px 15px;
-    background-color: #333;
-    color: #eee;
-    border: none;
+#interaction-area button, #interaction-area input[type="text"], #interaction-area .terminal-input {
+    padding: 8px 12px;
+    background-color: #222;
+    color: #00ff00;
+    border: 1px solid #00ff00;
     border-radius: 4px;
     cursor: pointer;
     margin-right: 5px;
+    font-family: monospace;
+}
+
+#interaction-area button:hover {
+    background-color: #333;
+}
+
+#interaction-area input[type="text"]::placeholder {
+    color: #008000;
 }
 
 #next-level-button, #message-close-button {
@@ -51,13 +60,61 @@ body {
     cursor: pointer;
     display: block;
     margin-top: 10px;
+    font-family: sans-serif; /* Revert to sans-serif for buttons */
 }
 
 #hud {
     display: flex;
     justify-content: space-between;
     padding: 10px 0;
-    border-top: 1px solid #333;
+    border-top: 1px solid #008000;
+    color: #00ff00;
+}
+
+.terminal {
+    background-color: #000;
+    border: 1px solid #00ff00;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 4px;
+}
+
+.terminal-output {
+    white-space: pre-wrap; /* Preserve formatting */
+    font-family: monospace;
+    color: #00ff00;
+    min-height: 50px;
+}
+
+.terminal-input {
+    width: 100%;
+    border: none;
+    background-color: transparent;
+    color: #00ff00;
+    font-family: monospace;
+    outline: none;
+    margin-top: 5px;
+}
+
+#message-area {
+    background-color: #111;
+    border: 1px solid #00ff00;
+    padding: 15px;
+    border-radius: 4px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 10;
+    text-align: center;
+}
+
+#message-text {
+    margin-bottom: 10px;
+}
+
+#message-close-button {
+    font-family: sans-serif;
 }
 
 /* Basic responsiveness */
